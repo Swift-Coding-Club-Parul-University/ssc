@@ -73,7 +73,7 @@ All fields from the Google Form mapped to database columns.
 |--------|------|----------|-------|
 | why_interested | text | yes | Long answer |
 | has_idea | text | yes | Yes / Rough idea / Exploring / No |
-| idea_description | text | yes | Long answer |
+| idea_description | text | no | Long answer — optional, "N/A" accepted |
 | excitement_level | text[] | yes | Array of checkboxes |
 | build_interest | text[] | yes | Array: iOS app / Game / AI-ML / etc. |
 

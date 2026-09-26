@@ -121,6 +121,7 @@ module.exports = async function handler(req, res) {
     student_status: "",
     device_frequency: "",
     competition_details: "",
+    idea_description: "",
     anything_else: ""
   };
   for (const [key, val] of Object.entries(requiredDefaults)) {
