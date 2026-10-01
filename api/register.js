@@ -150,7 +150,76 @@ module.exports = async function handler(req, res) {
     return res.status(500).json({ error: "Database error during registration." });
   }
 
-  // 4. Send Email
+  // 4. Google Sheets relay — runs ONLY after a successful insert, so a
+  // rejected or retried submission can never append a duplicate sheet row.
+  const SHEET_WEBHOOK_URL =
+    process.env.SHEET_WEBHOOK_URL ||
+    "https://script.google.com/macros/s/AKfycbyiocTwcWP6Fc2obdIuWnX7M8X62DtkEDKpY1q0iH3l8UOk4uokopCyKi-z5wM9bqrOvg/exec";
+
+  const arr = function (v) {
+    return Array.isArray(v) ? v.join(", ") : v || "";
+  };
+  const sheetPayload = {
+    original_id: insertedId,
+    submittedAt: new Date().toISOString(),
+    fullName: rowPayload.full_name || "",
+    email: rowPayload.email || "",
+    contact: rowPayload.contact_number || "",
+    faculty: rowPayload.faculty_institute || "",
+    programme: rowPayload.programme_course || "",
+    semester: rowPayload.current_semester_year || "",
+    division: rowPayload.division_batch || "",
+    enrollmentNumber: rowPayload.enrollment_number || rowPayload.uni_enrollment_id || "",
+    hasUniEmail: rowPayload.has_uni_email ? "Yes" : "No",
+    uniEmail: rowPayload.uni_email || "",
+    personalEmail: rowPayload.personal_email || "",
+    studentStatus: rowPayload.student_status || "",
+    whyInterested: rowPayload.why_interested || "",
+    hasIdea: rowPayload.has_idea || "",
+    ideaPitch: rowPayload.idea_description || "",
+    excitement: arr(rowPayload.excitement_level),
+    buildInterest: arr(rowPayload.build_interest),
+    macAccess: rowPayload.mac_access || "",
+    deviceFrequency: rowPayload.device_frequency || "",
+    needsMacLab: rowPayload.needs_mac_lab || "",
+    prepHours: rowPayload.hours_per_week_prep || "",
+    appExperience: rowPayload.app_experience || "",
+    appleExperience: rowPayload.apple_experience || "",
+    interests: arr(rowPayload.interests_improving),
+    prevCompetitions: rowPayload.previous_competitions ? "Yes" : "No",
+    competitionDetails: rowPayload.competition_details || "",
+    commitmentLevel: rowPayload.commitment_level || "",
+    programHours: rowPayload.hours_per_week_program || "",
+    workSchedule: arr(rowPayload.work_schedule),
+    attendSessions: rowPayload.willing_to_attend || "",
+    github: rowPayload.github_profile || "",
+    linkedin: rowPayload.linkedin_profile || "",
+    portfolio: rowPayload.portfolio_website || "",
+    additionalComments: rowPayload.anything_else || "",
+  };
+
+  try {
+    const ctrl = new AbortController();
+    const sheetTimer = setTimeout(function () { ctrl.abort(); }, 5000);
+    try {
+      const sheetRes = await fetch(SHEET_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(sheetPayload),
+        signal: ctrl.signal,
+      });
+      if (!sheetRes.ok) {
+        console.error("Google Sheets relay HTTP status:", sheetRes.status);
+      }
+    } finally {
+      clearTimeout(sheetTimer);
+    }
+  } catch (err) {
+    // Backup sync must never fail the registration itself.
+    console.error("Google Sheets relay error:", err && err.message ? err.message : err);
+  }
+
+  // 5. Send Email
   try {
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);

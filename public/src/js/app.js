@@ -786,52 +786,6 @@ function executeSubmission(){
   if(submitBtn)submitBtn.textContent="Submitting…";
   var row=buildRegistrationRow();
 
-  // Real-time Google Sheets Webhook
-  var sheetWebhookUrl = "https://script.google.com/macros/s/AKfycbyiocTwcWP6Fc2obdIuWnX7M8X62DtkEDKpY1q0iH3l8UOk4uokopCyKi-z5wM9bqrOvg/exec";
-  var sheetPayload = {
-    fullName: row.full_name || "",
-    email: row.email || "",
-    contact: row.contact_number || "",
-    faculty: row.faculty_institute || "",
-    programme: row.programme_course || "",
-    semester: row.current_semester_year || "",
-    division: row.division_batch || "",
-    enrollmentNumber: row.enrollment_number || row.uni_enrollment_id || "",
-    hasUniEmail: row.has_uni_email ? "Yes" : "No",
-    uniEmail: row.uni_email || "",
-    personalEmail: row.personal_email || "",
-    studentStatus: row.student_status || "",
-    whyInterested: row.why_interested || "",
-    hasIdea: row.has_idea || "",
-    ideaPitch: row.idea_description || "",
-    excitement: Array.isArray(row.excitement_level) ? row.excitement_level.join(", ") : (row.excitement_level || ""),
-    buildInterest: Array.isArray(row.build_interest) ? row.build_interest.join(", ") : (row.build_interest || ""),
-    macAccess: row.mac_access || "",
-    deviceFrequency: row.device_frequency || "",
-    needsMacLab: row.needs_mac_lab || "",
-    prepHours: row.hours_per_week_prep || "",
-    appExperience: row.app_experience || "",
-    appleExperience: row.apple_experience || "",
-    interests: Array.isArray(row.interests_improving) ? row.interests_improving.join(", ") : (row.interests_improving || ""),
-    prevCompetitions: row.previous_competitions ? "Yes" : "No",
-    competitionDetails: row.competition_details || "",
-    commitmentLevel: row.commitment_level || "",
-    programHours: row.hours_per_week_program || "",
-    workSchedule: Array.isArray(row.work_schedule) ? row.work_schedule.join(", ") : (row.work_schedule || ""),
-    attendSessions: row.willing_to_attend || "",
-    github: row.github_profile || "",
-    linkedin: row.linkedin_profile || "",
-    portfolio: row.portfolio_website || "",
-    additionalComments: row.anything_else || ""
-  };
-
-  fetch(sheetWebhookUrl, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(sheetPayload)
-  }).catch(function(err){ console.error("Google Sheets sync error:", err); });
-
   var turnstileResponse = "";
   var turnstileElement = form.querySelector('[name="cf-turnstile-response"]');
   if (turnstileElement) {
