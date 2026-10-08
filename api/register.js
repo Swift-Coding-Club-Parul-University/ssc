@@ -120,6 +120,7 @@ module.exports = async function handler(req, res) {
     personal_email: "",
     student_status: "",
     device_frequency: "",
+    independence_confidence: "",
     competition_details: "",
     idea_description: "",
     anything_else: ""

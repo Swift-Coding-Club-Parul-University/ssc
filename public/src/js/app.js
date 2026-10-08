@@ -110,7 +110,7 @@ var pages=document.querySelectorAll(".form-page");
 var pageValidation={
   1:["email","whyInterested","hasIdea"],
   2:["fullName","contact","faculty","programme","semester","hasUniEmail","uniEmail","personalEmail","studentStatus","enrollmentNumber"],
-  3:["macAccess","deviceFrequency","prepHours"],
+  3:["macAccess","deviceFrequency","needMacLab","prepHours"],
   4:["appExperience","appleExperience","prevCompetitions"],
   5:["commitmentLevel","programHours","attendSessions","confirmAccuracy","noGuarantee","agreeContact"]
 };
