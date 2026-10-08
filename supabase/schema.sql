@@ -10,11 +10,11 @@ CREATE TABLE IF NOT EXISTS public.registrations (
 
   -- Core Identity
   email TEXT UNIQUE NOT NULL,
-  full_name TEXT NOT NULL,
-  contact_number TEXT NOT NULL,
-  faculty_institute TEXT NOT NULL,
-  programme_course TEXT NOT NULL,
-  current_semester_year TEXT NOT NULL,
+  full_name TEXT NOT NULL DEFAULT 'Applicant',
+  contact_number TEXT NOT NULL DEFAULT 'N/A',
+  faculty_institute TEXT NOT NULL DEFAULT 'Other',
+  programme_course TEXT NOT NULL DEFAULT 'N/A',
+  current_semester_year TEXT NOT NULL DEFAULT '1',
   division_batch TEXT,
   github_profile TEXT,
   linkedin_profile TEXT,

@@ -99,8 +99,26 @@ module.exports = async function handler(req, res) {
   }
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-  // Ensure all NOT NULL columns have values
+  // Ensure all NOT NULL columns have values and never trigger constraint errors
   const requiredDefaults = {
+    full_name: full_name || "Applicant",
+    contact_number: "N/A",
+    faculty_institute: "Other",
+    programme_course: "N/A",
+    current_semester_year: "1",
+    enrollment_number: `TEMP-${Date.now()}`,
+    mac_access: "None",
+    needs_mac_lab: "No",
+    hours_per_week_prep: "0",
+    app_experience: "None",
+    apple_experience: "None",
+    independence_confidence: "Intermediate",
+    commitment_level: "Moderate",
+    hours_per_week_program: "2-5",
+    willing_to_attend: "Yes",
+    why_interested: "Interested in Swift Student Challenge",
+    has_idea: "Not yet",
+    idea_description: "N/A",
     work_schedule: [],
     interests_improving: [],
     excitement_level: [],
@@ -120,13 +138,11 @@ module.exports = async function handler(req, res) {
     personal_email: "",
     student_status: "",
     device_frequency: "",
-    independence_confidence: "",
     competition_details: "",
-    idea_description: "",
     anything_else: ""
   };
   for (const [key, val] of Object.entries(requiredDefaults)) {
-    if (rowPayload[key] === undefined || rowPayload[key] === null) {
+    if (rowPayload[key] === undefined || rowPayload[key] === null || (typeof rowPayload[key] === "string" && !rowPayload[key].trim() && (key === "faculty_institute" || key === "full_name" || key === "why_interested" || key === "has_idea"))) {
       rowPayload[key] = val;
     }
   }

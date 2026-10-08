@@ -85,6 +85,9 @@ function buildRegistrationRow(){
   if (!row.personal_email && row.email) {
     row.personal_email = row.email;
   }
+  if (!row.faculty_institute) {
+    row.faculty_institute = raw.faculty || "Other";
+  }
   // Ensure NOT NULL array columns always have a value
   if (!row.work_schedule) row.work_schedule = [];
   if (!row.interests_improving) row.interests_improving = [];
@@ -703,7 +706,12 @@ function showConfirmModal(){
 
 if(form)form.addEventListener("submit",function(e){
   e.preventDefault();
-  if(!validatePage(currentPage))return;
+  for (var p = 1; p <= TOTAL_PAGES; p++) {
+    if (!validatePage(p)) {
+      goToPage(p);
+      return;
+    }
+  }
   if(confirmModal){
     showConfirmModal();
   }else{
