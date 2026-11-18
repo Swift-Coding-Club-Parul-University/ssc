@@ -667,6 +667,112 @@ function checkEmailExists(email){
 }
 
 /* ============================================
+   INVITE GATE — exclusive access
+   ============================================ */
+var INVITE_KEY="ssc2027_invite_code";
+var inviteGate=document.getElementById("inviteGate");
+var inviteCodeInput=document.getElementById("inviteCodeInput");
+var inviteVerifyBtn=document.getElementById("inviteVerifyBtn");
+var inviteErrorEl=document.getElementById("inviteError");
+
+function getInviteCode(){
+  try{return sessionStorage.getItem(INVITE_KEY)||""}catch(e){return ""}
+}
+
+function setInviteCode(code){
+  try{
+    if(code)sessionStorage.setItem(INVITE_KEY,code);
+    else sessionStorage.removeItem(INVITE_KEY);
+  }catch(e){}
+}
+
+function showInviteError(msg){
+  if(inviteErrorEl){inviteErrorEl.textContent=msg||""}
+}
+
+function verifyInvite(rawCode,silent){
+  if(!inviteGate)return Promise.resolve(false);
+  var code=String(rawCode||"").trim().toUpperCase();
+  if(!code){
+    if(!silent)showInviteError("Enter your invite code.");
+    return Promise.resolve(false);
+  }
+  return fetch("/api/invite/verify",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({code:code})
+  }).then(function(r){return r.json()}).then(function(d){
+    if(d&&d.valid){
+      setInviteCode(code);
+      if(inviteCodeInput)inviteCodeInput.value=code;
+      showInviteError("");
+      return true;
+    }
+    if(!silent)showInviteError((d&&d.error)||"Invalid invite code.");
+    return false;
+  }).catch(function(){
+    if(!silent)showInviteError("Could not verify invite. Check your connection and try again.");
+    return false;
+  });
+}
+
+function unlockForm(){
+  if(!inviteGate||!formSection)return;
+  inviteGate.classList.add("hidden");
+  formSection.classList.remove("hidden");
+  var savedPage=restoreProgress();
+  toggleVerificationFields();
+  goToPage(savedPage&&savedPage>=1&&savedPage<=TOTAL_PAGES?savedPage:1);
+  window.scrollTo({top:0,behavior:"smooth"});
+  showToast("Invite verified — welcome aboard!","success");
+}
+
+function initInviteGate(){
+  if(!inviteGate)return;
+
+  /* Auto-read code from ?code= / ?invite= / ?t= link param */
+  var urlCode="";
+  try{
+    var params=new URLSearchParams(window.location.search);
+    urlCode=(params.get("code")||params.get("invite")||params.get("t")||"").trim().toUpperCase();
+  }catch(e){}
+
+  if(urlCode&&inviteCodeInput){inviteCodeInput.value=urlCode}
+
+  /* Already-verified this session (or came via link) → verify silently, then unlock */
+  var candidate=urlCode||getInviteCode();
+  if(candidate){
+    verifyInvite(candidate,true).then(function(ok){if(ok)unlockForm()});
+  }
+
+  if(inviteVerifyBtn){
+    inviteVerifyBtn.addEventListener("click",function(){
+      showInviteError("");
+      var btn=inviteVerifyBtn,old=btn.textContent;
+      btn.disabled=true;btn.textContent="Verifying\u2026";
+      verifyInvite(inviteCodeInput?inviteCodeInput.value:"").then(function(ok){
+        btn.disabled=false;btn.textContent=old;
+        if(ok){
+          unlockForm();
+          /* Strip the code from the address bar so it isn't re-shared */
+          try{history.replaceState(null,"",location.pathname)}catch(e){}
+        }
+      });
+    });
+  }
+
+  if(inviteCodeInput){
+    inviteCodeInput.addEventListener("input",function(){
+      this.value=this.value.toUpperCase().replace(/\s+/g,"");
+      showInviteError("");
+    });
+    inviteCodeInput.addEventListener("keydown",function(e){
+      if(e.key==="Enter"){e.preventDefault();if(inviteVerifyBtn)inviteVerifyBtn.click()}
+    });
+  }
+}
+
+/* ============================================
    FORM SUBMISSION
    ============================================ */
 if(prevBtn)prevBtn.addEventListener("click",function(){goToPage(currentPage-1)});
@@ -813,7 +919,8 @@ function executeSubmission(){
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       row: row,
-      turnstileResponse: turnstileResponse
+      turnstileResponse: turnstileResponse,
+      inviteCode: getInviteCode()
     })
   }).then(function(res) {
     return res.json().then(function(data) {
@@ -1001,6 +1108,7 @@ document.addEventListener("DOMContentLoaded",function(){
     if(canHover) initDeviceParallax();
   }
   initToastContainer();
+  initInviteGate();
 
   document.querySelectorAll('input[name="hasUniEmail"]').forEach(function(radio) {
     radio.addEventListener("change", toggleVerificationFields);

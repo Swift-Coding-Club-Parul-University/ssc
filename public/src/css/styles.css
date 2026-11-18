@@ -2257,3 +2257,134 @@ body.boot-done .hero-desc{animation:heroIn .8s cubic-bezier(.16,1,.3,1) .52s bot
     letter-spacing: 0.04em;
   }
 }
+
+/* ============================================
+   INVITE GATE — exclusive access screen
+   ============================================ */
+.invite-gate{
+  position: relative;
+  z-index: 2;
+  min-height: calc(100vh - 250px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px var(--pad) 90px;
+}
+
+.invite-gate-card{
+  max-width: 540px;
+  width: 100%;
+  padding: clamp(30px, 5vw, 46px) clamp(24px, 4.5vw, 42px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.invite-gate-icon{
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--swift);
+  background: rgba(240, 81, 35, 0.10);
+  border: 1px solid rgba(240, 81, 35, 0.32);
+  box-shadow: 0 0 36px rgba(240, 81, 35, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.invite-kicker{
+  margin-top: 22px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.invite-title{
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.7rem);
+  font-weight: 600;
+  color: #fff;
+}
+
+.invite-desc{
+  margin-top: 12px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 400px;
+}
+
+.invite-input-row{
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+  margin-top: 22px;
+}
+
+.invite-code-input{
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+}
+
+.invite-code-input::placeholder{
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.28);
+  font-weight: 500;
+}
+
+.invite-input-row .submit-btn{
+  flex-shrink: 0;
+  padding: 0 24px;
+  white-space: nowrap;
+}
+
+.invite-error{
+  display: block;
+  min-height: 20px;
+  margin-top: 8px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #ff9d85;
+}
+
+.invite-hint{
+  margin-top: 4px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 380px;
+}
+
+.invite-hint strong{
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .invite-gate{
+    padding-top: 8px;
+    padding-bottom: 60px;
+  }
+
+  .invite-input-row{
+    flex-direction: column;
+  }
+
+  .invite-input-row .submit-btn{
+    width: 100%;
+    padding: 13px 24px;
+  }
+}

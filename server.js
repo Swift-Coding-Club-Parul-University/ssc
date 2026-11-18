@@ -3,6 +3,8 @@ const express = require("express");
 const path = require("path");
 
 const registerHandler = require("./api/register");
+const checkEmailHandler = require("./api/check-email");
+const inviteVerifyHandler = require("./api/invite/verify");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,6 +18,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // API Routes
 app.post("/api/register", (req, res) => registerHandler(req, res));
+app.post("/api/check-email", (req, res) => checkEmailHandler(req, res));
+app.post("/api/invite/verify", (req, res) => inviteVerifyHandler(req, res));
 
 // Fallback to index.html
 app.use((req, res) => {

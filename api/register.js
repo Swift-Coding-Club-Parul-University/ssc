@@ -99,6 +99,47 @@ module.exports = async function handler(req, res) {
   }
   const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+  // 3.5 Invite Gate — registration requires a valid, unused single-use code.
+  // The claim is an atomic conditional UPDATE (WHERE used_at IS NULL), so two
+  // concurrent submissions with the same code can never both claim it.
+  const inviteCode = String((req.body && req.body.inviteCode) || "").trim().toUpperCase();
+  if (!inviteCode) {
+    return res.status(403).json({ error: "This application requires a valid invite link." });
+  }
+
+  let claimedInvite = null;
+  try {
+    const { data: found, error: findErr } = await supabase
+      .from("invites")
+      .select("id, expires_at")
+      .eq("code", inviteCode)
+      .maybeSingle();
+    if (findErr) throw findErr;
+
+    if (!found) {
+      return res.status(403).json({ error: "Invalid invite code." });
+    }
+    if (found.expires_at && new Date(found.expires_at).getTime() < Date.now()) {
+      return res.status(403).json({ error: "This invite has expired." });
+    }
+
+    const { data: claimed, error: claimErr } = await supabase
+      .from("invites")
+      .update({ used_at: new Date().toISOString() })
+      .eq("code", inviteCode)
+      .is("used_at", null)
+      .select("id");
+    if (claimErr) throw claimErr;
+
+    if (!claimed || claimed.length === 0) {
+      return res.status(403).json({ error: "This invite has already been used." });
+    }
+    claimedInvite = claimed[0];
+  } catch (inviteErr) {
+    console.error("Invite claim error:", inviteErr);
+    return res.status(500).json({ error: "Error verifying invite." });
+  }
+
   // Ensure all NOT NULL columns have values and never trigger constraint errors
   const requiredDefaults = {
     full_name: full_name || "Applicant",
@@ -156,14 +197,31 @@ module.exports = async function handler(req, res) {
 
     if (error) {
       if (error.code === "23505") { // Unique constraint violation
+        // Release the claimed invite — this attempt consumed nothing.
+        if (claimedInvite) {
+          try {
+            await supabase.from("invites").update({ used_at: null, registration_id: null }).eq("id", claimedInvite.id);
+          } catch (releaseErr) { console.error("Invite release error:", releaseErr); }
+        }
         return res.status(409).json({ error: "You have already registered with this email." });
       }
       console.error("Supabase error details:", JSON.stringify({ code: error.code, message: error.message, details: error.details, hint: error.hint }));
       throw error;
     }
     insertedId = data[0].id;
+
+    // Bind the invite to this registration for the audit trail.
+    try {
+      await supabase.from("invites").update({ registration_id: insertedId }).eq("id", claimedInvite.id);
+    } catch (bindErr) { console.error("Invite bind error:", bindErr); }
   } catch (err) {
     console.error("Supabase insert error:", err);
+    // Release the claimed invite so it isn't burned by a failed attempt.
+    if (claimedInvite) {
+      try {
+        await supabase.from("invites").update({ used_at: null, registration_id: null }).eq("id", claimedInvite.id);
+      } catch (releaseErr) { console.error("Invite release error:", releaseErr); }
+    }
     return res.status(500).json({ error: "Database error during registration." });
   }
 

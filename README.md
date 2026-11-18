@@ -89,6 +89,26 @@ SMTP_FROM="Swift Coding Club Parul University" <your-email@gmail.com>
 
 ---
 
+## 🎟️ Invite-Only Registrations
+
+Registrations re-opened in **exclusive invite-only mode**. Public access is closed; only students holding a personal invite link can apply.
+
+**How it works**
+
+1. Run `supabase/invites.sql` in the Supabase SQL editor — creates a separate `invites` table (the `registrations` table and its backup trigger are **not** modified).
+2. Mint codes: `node scripts/make-invites.js --count 25` (or `--file students.csv`, optional `--expires 2026-12-01`). A ready-to-send CSV lands in `invites-out/`.
+3. Send each student their personal link: `https://sscpu.vercel.app/apply.html?code=XXXX-XXXX`.
+4. The apply page shows an invite gate, verifies the code via `/api/invite/verify`, then unlocks the form.
+5. On submit, `/api/register` **atomically claims** the code (`UPDATE ... WHERE used_at IS NULL`) before inserting — single-use is enforced server-side, and the invite is bound to the created registration for the audit trail. Failed attempts release the claim automatically.
+
+**Notes**
+
+* Codes are single-use, revocable anytime (delete the row), and optional expiry per batch.
+* The `invites` table has RLS enabled with zero policies — only the service role can touch it.
+* Didn't get an invite? The gate directs students to the Apple Lab (C.V. Raman Building) for in-person invites.
+
+---
+
 ## 🔒 Security & Verification
 
 * **Row Level Security (RLS):** Public anonymous key has `INSERT ONLY` access. Read, update, and delete actions are blocked.
