@@ -34,14 +34,14 @@ const CONFIG = {
     "https://docs.google.com/forms/d/e/1FAIpQLSdZoNfxqcbs_cXWdDAiJfqoTtpBD_hlanobk0NRBfWUsBTZfw/viewform?usp=header",
 };
 
-/* Openings reference the time change (correction mail) */
+/* Opening references the time change (correction mail) — old slot struck to new */
 function openingFor(first) {
   const t = CONFIG.TIME;
   const variants = [
-    `Hi ${first} — quick but important: the briefing time we sent earlier was wrong. The correct slot is ${t}. Please update your calendar; everything else stays the same.`,
-    `${first}, heads up — we've corrected the briefing timing. It's now ${t}. Same venue, same agenda, just the right time this time.`,
-    `Hey ${first}, sorry about the mix-up: the earlier time slot was a mistake. Your briefing is ${t}. Mark it down and you're set.`,
-    `Hi ${first}, important update — please note the corrected briefing time: ${t}. We'd love to see you there.`,
+    `Hey ${first}, quick update on Saturday's schedule — we've updated the briefing timing from 12:30 – 14:30 to ${t}. Mark it down and you're set.`,
+    `Hi ${first} — quick but important: the briefing timing we sent earlier (12:30 – 14:30) was wrong. The correct slot is ${t}. Please update your calendar; everything else stays the same.`,
+    `${first}, heads up — we've corrected the briefing timing from 12:30 – 14:30 to ${t}. Same venue, same agenda, just the right time this time.`,
+    `Hey ${first}, sorry about the mix-up: the earlier 12:30 – 14:30 slot was a mistake. Your briefing is now ${t}. Mark it down and you're set.`,
   ];
   return variants[Math.floor(Math.random() * variants.length)];
 }

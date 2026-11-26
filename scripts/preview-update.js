@@ -27,8 +27,8 @@ function render(first, time) {
 
 const out1 = path.join(__dirname, "..", "invites-out", "preview-batch1.html");
 const out2 = path.join(__dirname, "..", "invites-out", "preview-batch2.html");
-fs.writeFileSync(out1, render("Rishu", "9:30 - 11:00"));
-fs.writeFileSync(out2, render("Rishu", "11:30 - 1:00"));
+fs.writeFileSync(out1, render("Rishu", "9:30 - 11:15"));
+fs.writeFileSync(out2, render("Rishu", "11:15 - 1:00"));
 
 for (const f of [out1, out2]) {
   const html = fs.readFileSync(f, "utf8");
