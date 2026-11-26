@@ -70,8 +70,8 @@
   <!-- 2. DARK HERO: important update (Apple event-invite style) -->
   <tr><td class="pad hero" align="center" style="padding:48px 36px 42px 36px;background:#050507;background-image:url('https://sscpu.vercel.app/logos/mail-hero-dark.png');background-size:cover;background-position:center;">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>
-      <td style="background:#e8f1fd;border:1px solid #cfe4fa;border-radius:980px;padding:7px 18px;">
-        <span style="font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#2b6cb0;">Important update</span>
+      <td style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.28);border-radius:980px;padding:7px 18px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#ffffff;">Important update</span>
       </td>
     </tr></table>
     <div class="h1" style="padding-top:18px;font-size:37px;line-height:42px;font-weight:700;letter-spacing:-0.02em;color:#ffffff;">
@@ -80,16 +80,16 @@
     <div style="padding-top:14px;font-size:17px;line-height:25px;color:#a1a1a6;">
       {{OPENING}}
     </div>
-    <div style="padding-top:20px;font-size:14px;line-height:20px;font-weight:600;color:#ffd9a0;">
+    <div style="padding-top:20px;font-size:14px;line-height:20px;font-weight:600;color:#7fe9dc;">
       This replaces the time in our previous email
     </div>
   </td></tr>
 
   <!-- 3. WHITE: updated-time callout bar (loud + unmissable) -->
   <tr><td class="pad" style="padding:26px 36px 0 36px;background:#ffffff;">
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f0f7ff;border:1px solid #d6e8fb;border-radius:20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:rgba(14,178,164,0.07);border:1px solid rgba(14,178,164,0.30);border-radius:20px;">
       <tr><td class="timebar" style="padding:16px 20px;font-size:16px;line-height:23px;color:#3a3a3c;">
-        <span style="font-weight:700;color:#2b6cb0;">Updated time:</span> please <b>delete the earlier timing</b> from your calendar and use this one instead.
+        <span style="font-weight:700;color:#0a8f83;">Updated time:</span> please <b>delete the earlier timing</b> from your calendar and use this one instead.
       </td></tr>
     </table>
   </td></tr>
@@ -98,17 +98,19 @@
   <tr><td class="pad" align="center" style="padding:30px 36px 8px 36px;background:#ffffff;">
     <div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#6e6e73;">Briefing session</div>
     <div class="date" style="font-size:56px;line-height:60px;font-weight:700;letter-spacing:-0.02em;color:#1d1d1f;padding-top:8px;">{{DATE}}</div>
-    <div style="font-size:20px;line-height:27px;font-weight:700;color:#2b6cb0;padding-top:8px;">{{DAY}} &nbsp;&middot;&nbsp; {{TIME}}</div>
+    <div style="font-size:20px;line-height:27px;font-weight:700;color:#0a8f83;padding-top:8px;">{{DAY}} &nbsp;&middot;&nbsp; {{TIME}}</div>
     <div style="font-size:16px;line-height:24px;color:#6e6e73;padding-top:4px;">{{VENUE}}</div>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:26px;"><tr>
-      <td align="center" style="background:linear-gradient(180deg,#4a94e8 0%,#2b6cb0 100%);border-radius:980px;box-shadow:0 10px 24px rgba(43,108,176,0.28);">
+      <td align="center" style="background:linear-gradient(180deg,#19cdb9 0%,#0a8f83 100%);border-radius:980px;box-shadow:0 10px 24px rgba(10,143,131,0.30);">
         <a href="{{CONFIRM_LINK}}" style="display:inline-block;padding:15px 42px;font-size:16px;font-weight:600;color:#ffffff;">Confirm you're coming</a>
       </td></tr></table>
     <div style="font-size:13px;line-height:19px;color:#86868b;padding-top:12px;">Please update your calendar with this new time.</div>
   </td></tr>
 
-  <!-- 5. WHITE: proof strip -->
-  <tr><td class="pad" align="center" style="padding:40px 36px 36px 36px;background:#ffffff;margin-top:34px;border-top:1px solid #e8e8ed;">
+  <!-- 5. GLASS: proof strip -->
+  <tr><td class="pad" align="center" style="padding:36px 36px 36px 36px;background:#ffffff;margin-top:34px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:rgba(14,178,164,0.05);border:1px solid rgba(14,178,164,0.18);border-radius:24px;">
+    <tr><td align="center" style="padding:26px 22px 24px 22px;">
     <div style="font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#6e6e73;padding-bottom:18px;">From Parul University to Apple's global stage</div>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
       <tr>
@@ -121,6 +123,8 @@
           <div class="statlabel" style="font-size:14px;line-height:20px;color:#6e6e73;">Top 350 global winner: Praneel Pandey, B.Tech CSE</div>
         </td>
       </tr>
+    </table>
+    </td></tr>
     </table>
   </td></tr>
 
@@ -157,7 +161,7 @@
   </td></tr>
 
   <!-- 7. LIGHT GRAY: footer -->
-  <tr><td class="pad" align="center" style="padding:30px 36px 32px 36px;background:#f5f5f7;border-top:1px solid #e8e8ed;">
+  <tr><td class="pad" align="center" style="padding:30px 36px 32px 36px;background:#fafdfd;border-top:1px solid #e8e8ed;">
     <div style="font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#6e6e73;">Learn &nbsp;/&nbsp; Build &nbsp;/&nbsp; Make an impact</div>
     <div style="padding-top:14px;font-size:12px;line-height:19px;color:#86868b;">
       You're receiving this because you registered for the Swift Student Challenge 2027 at Parul University.
