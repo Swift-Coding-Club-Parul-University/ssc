@@ -215,8 +215,8 @@ async function main() {
     console.log("\n--- DRY RUN previews (first 5) ---");
     for (const r of pending.slice(0, 5)) {
       const html = render(template, r);
-      const m = html.match(/padding-top:16px;font-size:17px[^>]*>([^<]{0,80})/);
-      console.log("  \u2192 " + r.email + " | " + r.first + " | " + ((m && m[1]) || html.slice(0, 60)));
+      const m = html.match(/text-transform:uppercase;color:#f4705a;">Updated Time<\/span>\s*<div[^>]*>([^<]{0,60})/);
+      console.log("  \u2192 " + r.email + " | " + r.first + " | " + ((m && m[1]) || "[rendered]"));
     }
     console.log("\n\u2713 dry run done. " + (bad === 0 ? "all clean." : bad + " issues."));
     console.log("No mail was sent.");
