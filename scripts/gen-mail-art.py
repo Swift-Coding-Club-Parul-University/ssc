@@ -19,31 +19,31 @@ for y in range(H):
     for x in range(W):
         px[x, y] = (v_r, v_g, v_b)
 
-# bright, soft glow blobs (mint / aqua / lilac — bright but gentle)
+# bright, soft glow blobs (barely-there warm neutrals — keeps backdrop reading white)
 glow = Image.new("RGB", (W, H), (0, 0, 0))
 gd = ImageDraw.Draw(glow)
 random.seed(11)
 blobs = [
-    (150, 200, 360, (120, 235, 215)),   # bright mint top-left
-    (1060, 160, 320, (170, 225, 255)),  # sky top-right
-    (600, 1400, 460, (190, 245, 225)),  # mint bottom
-    (980, 880, 280, (215, 205, 255)),   # soft lilac mid
-    (260, 980, 260, (255, 230, 200)),   # warm peach hint
+    (150, 200, 360, (255, 236, 228)),   # warm blush top-left
+    (1060, 160, 320, (240, 240, 246)),  # cool neutral top-right
+    (600, 1400, 460, (255, 240, 232)),  # warm bottom
+    (980, 880, 280, (244, 238, 250)),   # soft lilac mid
+    (260, 980, 260, (255, 244, 232)),   # cream hint
 ]
 for cx, cy, rad, col in blobs:
     gd.ellipse([cx - rad, cy - rad, cx + rad, cy + rad], fill=col)
 glow = glow.filter(ImageFilter.GaussianBlur(190))
 
-# blend glow softly onto white
+# blend glow softly onto white (very low intensity)
 gp = glow.load()
 for y in range(H):
     for x in range(W):
         gr, gg, gb = gp[x, y]
         br, bg, bb = px[x, y]
         px[x, y] = (
-            min(255, int(br + (gr - 60) * 0.16)),
-            min(255, int(bg + (gg - 60) * 0.16)),
-            min(255, int(bb + (gb - 60) * 0.16)),
+            min(255, int(br + (gr - 235) * 0.28)),
+            min(255, int(bg + (gg - 235) * 0.28)),
+            min(255, int(bb + (gb - 235) * 0.28)),
         )
 
 # faint white light streaks
